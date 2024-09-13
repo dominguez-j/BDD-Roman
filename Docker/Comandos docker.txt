@@ -1,0 +1,20 @@
+docker images -> veo las imagenes descargadas
+docker search nombre_imagen -> busco una imagen 
+docker search nombre_imagen -> descargo la imagen
+docker rmi  nombre_imagen -> elimino la imagen
+
+docker compose up --build -> inicio los servicios definidos en el docker-compose.yml
+docker compose down -> detengo los servicios
+
+docker run -d --name nombre_container nombre_imagen -> creo y ejecuto el container
+docker ps -a -> veo los container activos y detenidos
+docker start nombre_container -> inico el container
+docker stop nombre_container -> detengo el container
+docker rm nombre_container -> elimino el container
+
+docker exec -ti container bash -> Accedo a la consola que está dentro del contenedor
+docker cp archivo container:/  -> copio el archivo en el root del container
+
+docker volume ls -> lista de volumenes
+docker volume create nombre_voluemn -> crear volumen
+docker volume rm nombre_volumen -> eliminar volumen
