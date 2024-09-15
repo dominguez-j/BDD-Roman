@@ -59,47 +59,66 @@ WHERE nota IS NOT null `
 
 11. Devolver los padrones de alumnos que no registran nota en materias.
 
- - ` ` 
+ - ` SELECT padron FROM alumnos EXCEPT
+SELECT padron FROM notas ` 
 
 12. Con el objetivo de traducir a otro idioma los nombres de materias y departamentos, devolver
-en una única consulta las nombres de todas las materias y de todas los departamentos.
+en una única consulta las nombres de todas las materias y de todos los departamentos.
 
- - ` ` 
+ - ` SELECT nombre FROM materias UNION
+SELECT nombre FROM departamentos ` 
 
 ### Parte D: Joins
 
 13. Devolver para cada materia su nombre y el nombre del departamento.
 
- - ` ` 
+ - ` SELECT m.nombre, d.nombre from materias m
+INNER JOIN departamentos d ON m.codigo = d.codigo ` 
 
 14. Para cada 10 registrado, devuelva el padron y nombre del alumno y el nombre de la materia
 correspondientes a dicha nota.
 
- - ` ` 
+ - ` SELECT a.padron, a.nombre, m.nombre FROM alumnos a
+INNER JOIN notas n ON a.padron = n.padron
+INNER JOIN materias m ON m.numero = n.numero AND m.codigo = n.codigo
+WHERE n.nota = 10; ` 
 
 15. Listar para cada carrera su nombre y el padrón de los alumnos que estén anotados en ella.
 Incluir también las carreras sin alumnos inscriptos.
 
- - ` ` 
+ - ` SELECT c.nombre, a.padron FROM carreras c
+LEFT JOIN inscripto_en i ON c.codigo = i.codigo
+LEFT JOIN alumnos a ON i.padron = a.padron ` 
 
-16. Listar para cada carrera su nombre y el padron de ICF alumn(F padron mayor a 75000
+16. Listar para cada carrera su nombre y el padron de los alumnos con padron mayor a 75000
 que estén anotados en ella. Incluir también las carreras sin alumnos inscriptos con padrón
-mayor a
+mayor a 75000
 
- - ` ` 
+ - ` SELECT DISTINCT c.nombre, a.padron FROM carreras c
+LEFT JOIN inscripto_en i ON c.codigo = i.codigo
+LEFT JOIN alumnos a ON i.padron = a.padron AND a.padron > 75000 ` 
 
-17. Listar el padrón de aquellos que tengan más de una nota en Ia materia 75.15.
+17. Listar el padrón de aquellos que tengan más de una nota en la materia 75.15.
 
- - ` `
+ - ` SELECT padron FROM notas
+WHERE codigo = 75 AND numero = 15
+GROUP BY padron
+HAVING COUNT(*) > 1 `
  
 18. Obtenga el padrón y nombre de las alumnos que aprobaron la materia 71.14 y no aprobaron
-la materia 71.15
+la materia 71.15.
 
- - ` ` 
+ - ` SELECT a.padron, a.nombre FROM alumnos a
+INNER JOIN notas n ON a.padron = n.padron
+WHERE n.codigo = 71 AND n.numero = 14 AND n.nota >= 4
+INTERSECT 
+SELECT a.padron, a.nombre FROM alumnos a
+INNER JOIN notas n ON a.padron = n.padron
+WHERE n.codigo = 71 AND n.numero = 15 AND n.nota < 4 ` 
 
 19. Obtener, sin repeticiones, todos los pares de padrones de alumnos tales que ambos alumnos
 rindieron la misma materia el mismo día. Devuelva también la fecha y el código y número
-de la materia
+de la materia.
 
  - ` ` 
 
