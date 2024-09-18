@@ -120,7 +120,14 @@ WHERE n.codigo = 71 AND n.numero = 15 AND n.nota < 4 `
 rindieron la misma materia el mismo día. Devuelva también la fecha y el código y número
 de la materia.
 
- - ` ` 
+ - ` SELECT DISTINCT LEAST(n1.padron, n2.padron) AS padron1, 
+GREATEST(n1.padron, n2.padron) AS padron2, n1.fecha, n1.codigo, n1.numero
+FROM notas n1
+INNER JOIN notas n2 
+ON  n1.fecha = n2.fecha 
+AND n1.codigo = n2.codigo
+AND n1.numero = n2.numero 
+AND n1.padron < n2.padron ` 
 
 ### Parte E: Agrupamiento
 
@@ -128,17 +135,29 @@ de la materia.
 cantidad total de notas registradas en materias del departamento. Ordene por la cantidad
 de materias descendente.
 
- - ` ` 
+ - ` SELECT d.codigo, d.nombre, COUNT(DISTINCT m.numero) cant_mat, COUNT(n.nota) cant_notas
+FROM departamentos d
+LEFT JOIN notas n ON d.codigo = n.codigo
+LEFT JOIN materias m ON n.numero = m.numero AND n.codigo = m.codigo
+GROUP BY d.codigo, d.nombre
+ORDER BY cant_mat DESC ` 
 
 21. Para cada carrera devuelva su nombre y la cantidad de alumnos inscriptos. Incluya las
 carreras sin alumnos.
 
- - ` ` 
+ - ` SELECT c.nombre, COUNT(i.padron) cant_alumnos
+FROM carreras c
+LEFT JOIN inscripto_en i ON c.codigo = i.codigo
+GROUP BY c.codigo ` 
 
 22. Para cada alumno con al menos tres notas, devuelva su padron, nombre, promedio de notas
 y mejor nota registrada.
 
- - ` ` 
+ - ` SELECT a.padron, a.nombre, AVG(n.nota), MAX(n.nota)
+FROM alumnos a
+INNER JOIN notas n ON a.padron = n.padron
+GROUP BY a.padron, a.nombre
+HAVING COUNT(n.nota) >= 3 ` 
 
 ### Parte F: Consultas avanzadas
 
