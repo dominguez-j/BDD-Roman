@@ -163,13 +163,34 @@ HAVING COUNT(n.nota) >= 3 `
 
 23. Obtener el código y número de la o las materias con mayor cantidad de notas registradas.
 
- - ` ` 
+ - ` WITH cantidad_notas AS (
+    SELECT codigo, numero, COUNT(padron) AS cantidad
+    FROM notas
+    GROUP BY (codigo, numero)
+)
+SELECT *
+FROM cantidad_notas c
+WHERE cantidad >= ALL(SELECT cantidad FROM cantidad_notas)
+ ` 
 
 24. Obtener el padrón de los alumnos que tienen nota en todas las materias.
   
- - ` ` 
+ - ` SELECT padron
+FROM notas
+GROUP BY (padron)
+HAVING COUNT(DISTINCT (codigo, numero)) = (
+    SELECT COUNT(1)
+    FROM materias
+)
+ ` 
 
 25. Obtener el promedio general de notas por alumno (cuantas notas tiene en promedio un
 alumno), considerando únicamente alumnos con al menos una nota.
 
- - ` ` 
+ - ` SELECT AVG(cantidad)
+FROM (
+    SELECT padron, COUNT(nota) AS cantidad
+    FROM notas
+    GROUP BY padron
+) AS c_notas
+ ` 
